@@ -9,12 +9,12 @@ function Login(props) {
       <div className="container">
         <div className="row px-3 px-sm-0">
           <div className="content-left red col-12  col-sm-6 d-none  d-sm-block pt-5 pb-3 text-center">
-            <div className="brand">Sony House</div>
+            <div className="brand">Sony Academy</div>
             <div className="detail">Learning everything...</div>
           </div>
           <div className="content-right yellow col-12 col-sm-6 mx-3 mx-auto d-flex flex-column gap-3 py-3 ">
             <div className="brand text-uppercase fs-4 text-center fw-bolder font-monospace text-primary d-sm-none d-block">
-              Sony House
+              Sony Academy
             </div>
             <input
               type="text"
