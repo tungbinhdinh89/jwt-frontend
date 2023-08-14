@@ -12,3 +12,6 @@ npm i --save-exact axios@0.25.0
 
 # install react toastify
 npm i --save-exact react-toastify@8.1.0
+
+# install lodash
+npm i --save-exact lodash@4.17.21
