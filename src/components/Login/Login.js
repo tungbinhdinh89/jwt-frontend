@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Login.scss";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
 import { toast } from "react-toastify";
@@ -36,6 +36,7 @@ function Login(props) {
       };
       sessionStorage.setItem("account", JSON.stringify(data));
       router.push("/users");
+      window.location.reload();
       toast.success(res.data.errorMessage);
     }
 
@@ -44,6 +45,13 @@ function Login(props) {
     }
     // console.log("check res:", res.data);
   };
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      router.push("/");
+    }
+  }, [router]);
   return (
     <div className="login-container pt-3">
       <div className="container">
@@ -77,12 +85,17 @@ function Login(props) {
               placeholder="Your password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
             <button className="btn btn-primary" onClick={handleLogin}>
               Login
             </button>
             <span className="text-center">
-              <a href="#" className="forgot-pass">
+              <a href="/#" className="forgot-pass">
                 Forgot your password?
               </a>
             </span>

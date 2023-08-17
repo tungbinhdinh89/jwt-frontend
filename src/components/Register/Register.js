@@ -189,7 +189,7 @@ function Register(props) {
               Register
             </button>
             <span className="text-center">
-              <a href="#" className="forgot-pass">
+              <a href="/#" className="forgot-pass">
                 Already have an account!
               </a>
             </span>
