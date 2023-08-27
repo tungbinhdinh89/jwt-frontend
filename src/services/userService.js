@@ -22,4 +22,31 @@ const fetchAllUser = (page, limit) => {
   );
 };
 
-export { registerNewUser, loginUser, fetchAllUser };
+const deleteUser = (user) => {
+  return axios.delete("http://localhost:8080/api/v1/user/delete", {
+    data: { id: user.id },
+  });
+};
+
+const updateUser = (user) => {
+  return axios.put("http://localhost:8080/api/v1/user/edit", {
+    ...user,
+  });
+};
+
+const createNewUser = (user) => {
+  return axios.post("http://localhost:8080/api/v1/user/create", { ...user });
+};
+
+const fetchGroupList = () => {
+  return axios.get("http://localhost:8080/api/v1/group/read");
+};
+export {
+  registerNewUser,
+  loginUser,
+  fetchAllUser,
+  deleteUser,
+  updateUser,
+  fetchGroupList,
+  createNewUser,
+};
