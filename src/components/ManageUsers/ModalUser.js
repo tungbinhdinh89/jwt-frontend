@@ -4,9 +4,14 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import _ from "lodash";
 
-import { createNewUser, fetchGroupList } from "../../services/userService";
+import {
+  createNewUser,
+  fetchGroupList,
+  editUser,
+  updateUser,
+} from "../../services/userService";
 
-function ModalUser({ handleClose, title, user, show }) {
+function ModalUser({ handleClose, action, user, show }) {
   const defaultUserInfo = {
     email: "",
     phone: "",
@@ -25,20 +30,23 @@ function ModalUser({ handleClose, title, user, show }) {
   };
 
   const [groupList, setGroupList] = useState([]);
-  const [userInfo, setUserInfo] = useState(defaultUserInfo);
+  const [userInfo, setUserInfo] = useState({});
+
   const [validInput, setValidInput] = useState(validInputsDefault);
 
   const getGroups = async () => {
     let res = await fetchGroupList();
-    if (res && res.data && res.data.errorCode === 0) {
-      setGroupList(res.data.data);
-      if (res.data.data && res.data.data.length > 0) {
-        let group = res.data.data;
-        setUserInfo({ ...userInfo, group_id: group[0].id });
-      }
-    } else {
-      toast.error(res.data.errorMessage);
-    }
+    setGroupList(res.data.data);
+
+    // if (res && res.data && res.data.errorCode === 0) {
+    //   setGroupList(res.data.data);
+    //   if (res.data.data && res.data.data.length > 0) {
+    //     let group = res.data.data;
+    //     setUserInfo({ ...userInfo, group_id: group[0].id });
+    //   }
+    // } else {
+    //   toast.error(res.data.errorMessage);
+    // }
   };
 
   const handleChangeInput = (value, name) => {
@@ -49,7 +57,7 @@ function ModalUser({ handleClose, title, user, show }) {
 
   const checkValidInputs = () => {
     // create user
-
+    if (action === "UPDATE") return true;
     let check = true;
     let arr = ["email", "phone", "password", "group_id"];
 
@@ -68,14 +76,22 @@ function ModalUser({ handleClose, title, user, show }) {
 
   const handleConfirmUser = async () => {
     // create new user
+
     let check = checkValidInputs();
     if (check) {
-      let res = await createNewUser(userInfo);
+      let res =
+        action === "UPDATE"
+          ? await updateUser(userInfo)
+          : await createNewUser(userInfo);
       if (res && res.data && res.data.errorCode === 0) {
         handleClose();
         window.location.reload();
         toast.success(res.data.errorMessage);
-      } else {
+      }
+      if (res && res.data.errorCode !== 0) {
+        let _validInput = _.cloneDeep(validInputsDefault);
+        _validInput[res.data.data] = false;
+        setValidInput(_validInput);
         toast.error(res.data.errorMessage);
       }
     }
@@ -83,8 +99,16 @@ function ModalUser({ handleClose, title, user, show }) {
 
   useEffect(() => {
     getGroups();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  useEffect(() => {
+    action === "UPDATE" ? setUserInfo(user) : setUserInfo(defaultUserInfo);
+    // if (action === "UPDATE") {
+    //   setUserInfo(user);
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <div>
@@ -96,7 +120,9 @@ function ModalUser({ handleClose, title, user, show }) {
         size="large"
       >
         <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>
+            {action === "CREATE" ? "Create new user" : "Update user"}
+          </Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -107,6 +133,7 @@ function ModalUser({ handleClose, title, user, show }) {
               </label>
               <input
                 type="email"
+                disabled={action === "UPDATE" ? true : false}
                 value={userInfo.email}
                 className={
                   validInput.email ? "form-control" : "form-control is-invalid"
@@ -122,6 +149,7 @@ function ModalUser({ handleClose, title, user, show }) {
               </label>
               <input
                 type="text"
+                disabled={action === "UPDATE" ? true : false}
                 value={userInfo.phone}
                 className={
                   validInput.phone ? "form-control" : "form-control is-invalid"
@@ -142,20 +170,22 @@ function ModalUser({ handleClose, title, user, show }) {
                 className="form-control"
               />
             </div>
-            <div className="col-12 col-sm-6 form-group">
-              <label htmlFor="">Password :</label>
-              <input
-                type="password"
-                className={
-                  validInput.password
-                    ? "form-control"
-                    : "form-control is-invalid"
-                }
-                onChange={(event) =>
-                  handleChangeInput(event.target.value, "password")
-                }
-              />
-            </div>
+            {action !== "UPDATE" && (
+              <div className="col-12 col-sm-6 form-group">
+                <label htmlFor="">Password :</label>
+                <input
+                  type="password"
+                  className={
+                    validInput.password
+                      ? "form-control"
+                      : "form-control is-invalid"
+                  }
+                  onChange={(event) =>
+                    handleChangeInput(event.target.value, "password")
+                  }
+                />
+              </div>
+            )}
             <div className="col-12  form-group">
               <label htmlFor="">Address :</label>
               <input
@@ -170,7 +200,7 @@ function ModalUser({ handleClose, title, user, show }) {
             <div className="col-12 col-sm-6 form-group">
               <label htmlFor="">Gender :</label>
               <select
-                defaultValue={userInfo.sex}
+                value={userInfo.sex}
                 className="form-control"
                 onChange={(event) =>
                   handleChangeInput(event.target.value, "sex")
@@ -186,7 +216,7 @@ function ModalUser({ handleClose, title, user, show }) {
                 Group (<span className="text-danger">*</span>):
               </label>
               <select
-                defaultValue={userInfo.group_id}
+                value={userInfo.group_id}
                 className={
                   validInput.group_id
                     ? "form-control"
@@ -212,7 +242,7 @@ function ModalUser({ handleClose, title, user, show }) {
             No
           </Button>
           <Button variant="primary" onClick={handleConfirmUser}>
-            Confirm
+            {action === "UPDATE" ? "Update" : "Add new"}
           </Button>
         </Modal.Footer>
       </Modal>

@@ -15,6 +15,9 @@ function Users() {
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [dataModal, setDataModal] = useState({});
+  const [actionModalUser, setActionModalUser] = useState("CREATE");
+
+  const [dataModalUser, setDataModalUser] = useState({});
 
   const fetchUsers = async () => {
     let res = await fetchAllUser(currentPage, currentLimit);
@@ -42,12 +45,14 @@ function Users() {
   };
 
   const handleUpdateUser = (user) => {
-    setDataModal(user);
+    setDataModalUser(user);
+    setActionModalUser("UPDATE");
     setIsShowModal(true);
   };
 
   const handleCreateNewUser = () => {
     setIsShowModal(true);
+    setActionModalUser("CREATE");
   };
 
   const handleClose = () => {
@@ -74,8 +79,13 @@ function Users() {
           <div className="title">
             <h3>Table user</h3>
           </div>
-          <div className="actions">
-            <button className="btn btn-success">Refresh </button>
+          <div className="actions d-flex gap-2 my-2">
+            <button
+              className="btn btn-success mr
+            -2"
+            >
+              Refresh{" "}
+            </button>
             <button
               className="btn btn-primary"
               onClick={() => handleCreateNewUser()}
@@ -103,7 +113,9 @@ function Users() {
                 <>
                   {userList.map((user, index) => (
                     <tr key={user.id}>
-                      <th scope="row">{index + 1}</th>
+                      <th scope="row">
+                        {(currentPage - 1) * currentLimit + index + 1}
+                      </th>
                       <td>{user.id}</td>
                       <td>{user.email}</td>
                       <td>{user.username}</td>
@@ -178,9 +190,12 @@ function Users() {
       {isShowModal && (
         <ModalUser
           handleClose={handleClose}
-          title={"Create new user"}
-          user={dataModal}
+          user={{
+            ...dataModalUser,
+            group_id: dataModalUser.Group ? dataModalUser.Group.id : "",
+          }}
           show={isShowModal}
+          action={actionModalUser}
         />
       )}
     </>

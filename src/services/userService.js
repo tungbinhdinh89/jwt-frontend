@@ -30,15 +30,23 @@ const deleteUser = (user) => {
 
 const updateUser = (user) => {
   return axios.put("http://localhost:8080/api/v1/user/edit", {
-    data: { id: user.id },
+    ...user,
   });
 };
 
-const createNewUser = (user)=>{
-  return axios.post('http://localhost:8080/api/v1/user/create',{...user})
-}
+const createNewUser = (user) => {
+  return axios.post("http://localhost:8080/api/v1/user/create", { ...user });
+};
 
-const fetchGroupList = ()=>{
-  return axios.get('http://localhost:8080/api/v1/group/read')
-}
-export { registerNewUser, loginUser, fetchAllUser, deleteUser, updateUser, fetchGroupList ,createNewUser};
+const fetchGroupList = () => {
+  return axios.get("http://localhost:8080/api/v1/group/read");
+};
+export {
+  registerNewUser,
+  loginUser,
+  fetchAllUser,
+  deleteUser,
+  updateUser,
+  fetchGroupList,
+  createNewUser,
+};
