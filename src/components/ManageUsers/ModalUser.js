@@ -7,7 +7,6 @@ import _ from "lodash";
 import {
   createNewUser,
   fetchGroupList,
-  editUser,
   updateUser,
 } from "../../services/userService";
 
@@ -30,6 +29,7 @@ function ModalUser({ handleClose, action, user, show }) {
   };
 
   const [groupList, setGroupList] = useState([]);
+
   const [userInfo, setUserInfo] = useState({});
 
   const [validInput, setValidInput] = useState(validInputsDefault);
@@ -85,7 +85,7 @@ function ModalUser({ handleClose, action, user, show }) {
           : await createNewUser(userInfo);
       if (res && res.data && res.data.errorCode === 0) {
         handleClose();
-        window.location.reload();
+        // window.location.reload();
         toast.success(res.data.errorMessage);
       }
       if (res && res.data.errorCode !== 0) {
@@ -100,7 +100,7 @@ function ModalUser({ handleClose, action, user, show }) {
   useEffect(() => {
     getGroups();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     action === "UPDATE" ? setUserInfo(user) : setUserInfo(defaultUserInfo);

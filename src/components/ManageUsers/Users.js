@@ -72,24 +72,32 @@ function Users() {
     }
   };
 
+  const handleRefresh = async () => {
+    console.log("tung");
+    await fetchUsers();
+  };
+
   return (
     <>
       <div className="manage-users-container container">
         <div className="users-header">
           <div className="title">
-            <h3>Table user</h3>
+            <h3>Manage user</h3>
           </div>
-          <div className="actions d-flex gap-2 my-2">
+          <div className="actions d-flex gap-2 my-3">
             <button
               className="btn btn-success mr
             -2"
+              onClick={() => handleRefresh()}
             >
+              <i className="fa fa-refresh mx-2"></i>
               Refresh{" "}
             </button>
             <button
               className="btn btn-primary"
               onClick={() => handleCreateNewUser()}
             >
+              <i className="fa fa-plus-circle mx-2"></i>
               Add new user
             </button>
           </div>
@@ -129,7 +137,7 @@ function Users() {
                             handleUpdateUser(user);
                           }}
                         >
-                          Edit
+                          <i className="fa fa-pencil-square-o"></i>
                         </button>
                         <button
                           className="btn btn-danger"
@@ -137,7 +145,7 @@ function Users() {
                             handleDeleteUser(user);
                           }}
                         >
-                          Delete
+                          <i className="fa fa-trash"></i>
                         </button>
                       </td>
                     </tr>

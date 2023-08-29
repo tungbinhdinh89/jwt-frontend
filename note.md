@@ -22,3 +22,6 @@ npm i --save-exact react-paginate@8.1.0
 
 # install react-bootstrap
 npm i --save-exact react-bootstrap@2.1.1
+
+# install font awesome
+npm i --save-exact font-awesome@4.7.0
