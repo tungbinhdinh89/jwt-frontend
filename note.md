@@ -25,3 +25,12 @@ npm i --save-exact react-bootstrap@2.1.1
 
 # install font awesome
 npm i --save-exact font-awesome@4.7.0
+
+# install json webtoken
+npm i --save-exact jsonwebtoken@8.5.1
+
+# install cookie parser
+npm i --save-exact cookie-parser@1.4.6
+
+# How can use axios interceptors
+https://stackoverflow.com/questions/52737078/how-can-you-use-axios-interceptors

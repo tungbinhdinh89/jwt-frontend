@@ -28,7 +28,7 @@ function Login(props) {
       return;
     }
     let res = await loginUser(valueLogin, password);
-    if (res && res.data && +res.data.errorCode === 0) {
+    if (res && +res.errorCode === 0) {
       // success
       let data = {
         isAuthenticated: true,
@@ -36,14 +36,15 @@ function Login(props) {
       };
       sessionStorage.setItem("account", JSON.stringify(data));
       router.push("/users");
-      window.location.reload();
-      toast.success(res.data.errorMessage);
+      // window.location.reload();
+      toast.success(res.errorMessage);
     }
 
-    if (res && res.data && +res.data.errorCode !== 0) {
-      toast.error(res.data.errorMessage);
+    if (res && +res.errorCode !== 0) {
+      toast.error(res.errorMessage);
     }
-    // console.log("check res:", res.data);
+    console.log("check res:", res);
+    console.log("🚀 ~ res.errorCode:", res.errorCode);
   };
 
   useEffect(() => {

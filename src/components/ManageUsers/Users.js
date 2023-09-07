@@ -21,8 +21,8 @@ function Users() {
 
   const fetchUsers = async () => {
     let res = await fetchAllUser(currentPage, currentLimit);
-    let data = res.data.data;
-    if (res && res.data && +res.data.errorCode === 0) {
+    let data = res.data;
+    if (res && +res.errorCode === 0) {
       setUserList(data.users);
       setcurrentLimit(5);
       setTotalPage(data.totalPage);
@@ -63,17 +63,16 @@ function Users() {
 
   const confirmDeleteUser = async () => {
     let res = await deleteUser(dataModal);
-    if (res.data && +res.data.errorCode === 0) {
+    if (res && +res.errorCode === 0) {
       await fetchUsers();
-      toast.success(res.data.errorMessage);
+      toast.success(res.errorMessage);
       setIsShowModalDelete(false);
     } else {
-      toast.error(res.data.errorMessage);
+      toast.error(res.errorMessage);
     }
   };
 
   const handleRefresh = async () => {
-    console.log("tung");
     await fetchUsers();
   };
 

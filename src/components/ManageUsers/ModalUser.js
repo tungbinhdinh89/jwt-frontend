@@ -36,7 +36,7 @@ function ModalUser({ handleClose, action, user, show }) {
 
   const getGroups = async () => {
     let res = await fetchGroupList();
-    setGroupList(res.data.data);
+    setGroupList(res.data);
 
     // if (res && res.data && res.data.errorCode === 0) {
     //   setGroupList(res.data.data);
@@ -83,16 +83,16 @@ function ModalUser({ handleClose, action, user, show }) {
         action === "UPDATE"
           ? await updateUser(userInfo)
           : await createNewUser(userInfo);
-      if (res && res.data && res.data.errorCode === 0) {
+      if (res && res.errorCode === 0) {
         handleClose();
         // window.location.reload();
-        toast.success(res.data.errorMessage);
+        toast.success(res.errorMessage);
       }
-      if (res && res.data.errorCode !== 0) {
+      if (res && res.errorCode !== 0) {
         let _validInput = _.cloneDeep(validInputsDefault);
-        _validInput[res.data.data] = false;
+        _validInput[res.data] = false;
         setValidInput(_validInput);
-        toast.error(res.data.errorMessage);
+        toast.error(res.errorMessage);
       }
     }
   };

@@ -12,7 +12,7 @@ function Register(props) {
   const router = useHistory();
 
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -41,7 +41,7 @@ function Register(props) {
       return false;
     }
 
-    if (!phoneNumber) {
+    if (!phone) {
       setObjCheckInput({ ...defaultValidInput, isValidPhone: false });
       toast.error("Phone number is required");
       return false;
@@ -76,17 +76,18 @@ function Register(props) {
   const handleRegister = async () => {
     let check = isValidInputs();
     if (check) {
-      let res = await registerNewUser(email, phoneNumber, username, password);
-      let serverData = res.data;
-      console.log("serverData: ", serverData);
-      if (+serverData.errorCode === 0) {
-        toast.success("register successfully!");
+      let res = await registerNewUser(email, phone, username, password);
+      console.log("🚀 ~ res:", res);
+
+      console.log("res: ", res.errorCode);
+      if (+res.errorCode === 0) {
+        toast.success(res.errorMessage);
         router.push("/login");
       }
-      if (+serverData.errorCode === 1) {
+      if (+res.errorCode === 1) {
         toast.error("Email or Phone number is already exist!");
       }
-      if (+serverData.errorCode === -2) {
+      if (+res.errorCode === -2) {
         toast.error("Something wrongs in service");
       }
     }
@@ -130,8 +131,8 @@ function Register(props) {
                     ? "form-control"
                     : "form-control is-invalid"
                 }
-                value={phoneNumber}
-                onChange={(event) => setPhoneNumber(event.target.value)}
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
                 placeholder="Phone number"
               />
             </div>
@@ -185,7 +186,8 @@ function Register(props) {
               className="btn btn-success"
               onClick={() => {
                 handleRegister();
-              }}>
+              }}
+            >
               Register
             </button>
             <span className="text-center">
